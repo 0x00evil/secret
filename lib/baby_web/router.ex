@@ -17,6 +17,7 @@ defmodule BabyWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+    get "/chat", PageController, :chat
     post "/baby", BabyController, :index
   end
 

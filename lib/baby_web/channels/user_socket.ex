@@ -2,7 +2,7 @@ defmodule BabyWeb.UserSocket do
   use Phoenix.Socket
 
   ## Channels
-  # channel "room:*", BabyWeb.RoomChannel
+   channel "room:lobby", BabyWeb.RoomChannel
 
   # Socket params are passed from the client and can
   # be used to verify and authenticate a user. After
