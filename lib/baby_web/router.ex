@@ -17,6 +17,7 @@ defmodule BabyWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+    post "/baby", BabyController, :index
   end
 
   # Other scopes may use custom stacks.
