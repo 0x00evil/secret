@@ -7,7 +7,7 @@ defmodule BabyWeb.BabyController do
   def index(conn, params) do
     iv = :base64.decode("WwjoHiCVNxBiWI6AhLmUsw==")
     mode = :aes_128_cbc
-    secret_key = Base.decode64!(params["secret"]["key"])
+    secret_key = params["secret"]["key"]
     clear_text = params["secret"]["encode"]
     secret_text = params["secret"]["decode"]
 
