@@ -22,14 +22,14 @@ let channel = socket.channel('room:lobby', {}); // connect to chat "room"
 channel.on('shout', function (payload) { // listen to the 'shout' event
     let li = document.createElement("li"); // create new list item DOM element
     let name = payload.name || 'guest';    // get name from payload or set default
-    li.innerHTML = '<p><b>' + name + '</b>: ' + payload.message + '</p>'; // set li contents
-    ul.appendChild(li);                    // append to list
+    li.innerHTML = `[${name}]: ${payload.message}`; // set li contents
+    messageContainer.appendChild(li);                    // append to list
 });
 
 channel.join(); // join the channel.
 
 
-let ul = document.getElementById('msg-list');        // list of messages.
+let messageContainer = document.getElementById('messages');        // list of messages.
 let name = document.getElementById('name');          // name of message sender
 let msg = document.getElementById('msg');            // message input field
 
