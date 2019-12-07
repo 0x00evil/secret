@@ -20,6 +20,22 @@ defmodule BabyWeb.BabyController do
     end
   end
 
+  def encode(params) do
+    iv = :base64.decode("WwjoHiCVNxBiWI6AhLmUsw==")
+    mode = :aes_128_cbc
+    secret_key = params["secret"]["key"]
+    clear_text = params["secret"]["encode"]
+    secret_text = params["secret"]["decode"]
+
+    if clear_text == "" do
+      plain_text = :crypto.block_decrypt(mode, secret_key, iv, Base.decode64!(secret_text))
+      unpad(plain_text)
+    else
+      cipher_text = :crypto.block_encrypt(mode, secret_key, iv, pad(clear_text, @aes_block_size))
+      Base.encode64(cipher_text)
+    end
+  end
+
   def pad(data, block_size) do
     to_add = block_size - rem(byte_size(data), block_size)
     data = data <> to_string(:string.chars(to_add, to_add))
