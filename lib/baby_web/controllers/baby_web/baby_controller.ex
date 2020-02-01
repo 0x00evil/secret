@@ -1,39 +1,33 @@
 defmodule BabyWeb.BabyController do
+  @iv :base64.decode("WwjoHiCVNxBiWI6AhLmUsw==")
+  @mode :aes_128_cbc
   @aes_block_size 16
 
 
   use BabyWeb, :controller
 
   def index(conn, params) do
-    iv = :base64.decode("WwjoHiCVNxBiWI6AhLmUsw==")
-    mode = :aes_128_cbc
     secret_key = params["secret"]["key"]
     clear_text = params["secret"]["encode"]
     secret_text = params["secret"]["decode"]
 
     if clear_text == "" do
-      plain_text = :crypto.block_decrypt(mode, secret_key, iv, Base.decode64!(secret_text))
-      text(conn, unpad(plain_text))
+      plain_text = decrypt(secret_key, secret_text)
+      text(conn, plain_text)
     else
-      cipher_text = :crypto.block_encrypt(mode, secret_key, iv, pad(clear_text, @aes_block_size))
-      text(conn, Base.encode64(cipher_text))
+      cipher_text = encrypt(secret_key, clear_text)
+      text(conn, cipher_text)
     end
   end
 
-  def encode(params) do
-    iv = :base64.decode("WwjoHiCVNxBiWI6AhLmUsw==")
-    mode = :aes_128_cbc
-    secret_key = params["secret"]["key"]
-    clear_text = params["secret"]["encode"]
-    secret_text = params["secret"]["decode"]
+  def encrypt(secret_key, clear_text) do
+    cipher_text = :crypto.block_encrypt(@mode, secret_key, @iv, pad(clear_text, @aes_block_size))
+    Base.encode64(cipher_text)
+  end
 
-    if clear_text == "" do
-      plain_text = :crypto.block_decrypt(mode, secret_key, iv, Base.decode64!(secret_text))
-      unpad(plain_text)
-    else
-      cipher_text = :crypto.block_encrypt(mode, secret_key, iv, pad(clear_text, @aes_block_size))
-      Base.encode64(cipher_text)
-    end
+  def decrypt(secret_key, cipher_text) do
+    plain_text = :crypto.block_decrypt(@mode, secret_key, @iv, Base.decode64!(cipher_text))
+    unpad(plain_text)
   end
 
   def pad(data, block_size) do

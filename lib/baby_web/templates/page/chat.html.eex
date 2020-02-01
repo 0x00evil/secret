@@ -4,9 +4,21 @@
 
 <div class="row">
   <div class="col-xs-3">
-    <input type="text" id="name" class="form-control" placeholder="Your Name" autofocus>
+    <input type="text" id="name" class="form-control" placeholder="nickname" autofocus>
   </div>
   <div class="col-xs-9">
-    <input type="text" id="msg" class="form-control" placeholder="Your Message">
+    <input type="text" id="msg" class="form-control" placeholder="message">
   </div>
 </div>
+
+
+<%= form_for @conn, Routes.session_path(@conn, :delete), [method: :delete, as: :user], fn _ -> %>
+  <div class="form-group">
+    <%= submit "登出" %>
+  </div>
+<% end %>
+
+
+<script type="text/javascript">window.userToken = "<%= assigns[:user_token] %>";</script>
+<script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
+
